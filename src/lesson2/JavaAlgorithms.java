@@ -97,7 +97,40 @@ public class JavaAlgorithms {
      * вернуть ту из них, которая встречается раньше в строке first.
      */
     static public String longestCommonSubstring(String firs, String second) {
-        throw new NotImplementedError();
+        int max = 0;
+        int maxI = 0;
+        int[][] matrix = new int[firs.length()][second.length()];
+        for (int i = 0; i <= firs.length() - 1; i++) {
+            for (int j = 0; j <= second.length() - 1; j++) {
+                matrix[i][j] = 0;
+            }
+        }
+        for (int i = 0; i <= firs.length() - 1; i++) {
+            for (int j = 0; j <= second.length() - 1; j++) {
+                if (firs.charAt(i) == second.charAt(j)) {
+                    matrix[i][j]++;
+                    if (i != 0 && j != 0 && matrix[i - 1][j - 1] != 0)
+                        matrix[i][j] += matrix[i - 1][j - 1];
+                }
+                if (matrix[i][j] > max) {
+                    max = matrix[i][j];
+                    maxI = i;
+                }
+            }
+        }
+        if (max == 0)
+            return "";
+        maxI = maxI - (max - 1);
+        char[] ansConstractor = new char[max];
+        int a = 0;
+        while (max >= 1) {
+            ansConstractor[a] = firs.charAt(maxI);
+            a++;
+            maxI++;
+            max--;
+        }
+        String ans = new String(ansConstractor);
+        return ans;
     }
 
     /**

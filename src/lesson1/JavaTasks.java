@@ -1,6 +1,8 @@
 package lesson1;
 
 import kotlin.NotImplementedError;
+import java.io.*;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class JavaTasks {
@@ -96,10 +98,26 @@ public class JavaTasks {
      * 99.5
      * 121.3
      */
-    static public void sortTemperatures(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static public void sortTemperatures(String inputName, String outputName) throws IOException {
+        Reader rd = new FileReader(inputName);
+        ArrayList<Double> tmp = new ArrayList<Double>();
+        BufferedReader br = new BufferedReader(rd);
+        String localStr;
+        while (true) {
+            localStr = br.readLine();
+            if (localStr == null)
+                break;
+            tmp.add(Double.valueOf(localStr));
+        }
+        Collections.sort(tmp);
+        FileWriter writer = new FileWriter(new File(outputName));
+        for (int i = 0; i <= tmp.size() - 1; i++) {
+            if (i == tmp.size() - 1)
+                writer.write(tmp.get(i).toString());
+            else writer.write(tmp.get(i).toString() + "\n");
+        }
+        writer.close();
     }
-
     /**
      * Сортировка последовательности
      *
@@ -129,8 +147,55 @@ public class JavaTasks {
      * 2
      * 2
      */
-    static public void sortSequence(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static public void sortSequence(String inputName, String outputName) throws IOException {
+        int max = 0;
+        Integer num = null;
+        HashMap<Integer, Integer> frequency = new HashMap<Integer, Integer>();
+        ArrayList<Integer> arr = new ArrayList<Integer>();
+        ArrayList<Integer> numList = new ArrayList<Integer>();
+        Reader rd = new FileReader(inputName);
+        BufferedReader br = new BufferedReader(rd);
+        String localStr;
+        while (true) {
+            localStr = br.readLine();
+            if (localStr == null)
+                break;
+            arr.add(Integer.valueOf(localStr));
+        }
+        for (int i = 0; i <= arr.size() - 1; i++ ) {
+            if (!frequency.containsKey(arr.get(i))) {
+                frequency.put(arr.get(i), 1);
+                numList.add(arr.get(i));
+            }
+            else {
+                Integer obj = frequency.get(arr.get(i));
+                frequency.put(arr.get(i),obj + 1);
+            }
+        }
+        for (int i = 0; i <= numList.size() - 1; i++) {
+            if (frequency.get(numList.get(i)) > max) {
+                max = frequency.get(numList.get(i));
+                num = numList.get(i);
+            }
+            if (frequency.get(numList.get(i)).equals(max)) {
+                if (numList.get(i) < num) {
+                    max = frequency.get(numList.get(i));
+                    num = numList.get(i);
+                }
+            }
+        }
+        arr.removeAll(Collections.singleton(num));
+        while (max != 0) {
+            arr.add(num);
+            max--;
+        }
+        FileWriter writer = new FileWriter(new File(outputName));
+        for (int i = 0; i <= arr.size() - 1; i++) {
+            if (i == arr.size() - 1)
+                writer.write(arr.get(i).toString());
+            else writer.write(arr.get(i).toString() + "\n");
+        }
+        writer.close();
     }
 
     /**
