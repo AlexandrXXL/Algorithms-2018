@@ -100,7 +100,7 @@ public class JavaTasks {
      */
     static public void sortTemperatures(String inputName, String outputName) throws IOException {
         Reader rd = new FileReader(inputName);
-        ArrayList<Double> tmp = new ArrayList<Double>();
+        List<Double> tmp = new ArrayList<Double>();
         BufferedReader br = new BufferedReader(rd);
         String localStr;
         while (true) {
@@ -117,7 +117,7 @@ public class JavaTasks {
             else writer.write(tmp.get(i).toString() + "\n");
         }
         writer.close();
-    }
+    } // O(n*log(n))
     /**
      * Сортировка последовательности
      *
@@ -168,7 +168,7 @@ public class JavaTasks {
                 numList.add(arr.get(i));
             }
             else {
-                Integer obj = frequency.get(arr.get(i));
+                int obj = frequency.get(arr.get(i));
                 frequency.put(arr.get(i),obj + 1);
             }
         }
@@ -196,7 +196,7 @@ public class JavaTasks {
             else writer.write(arr.get(i).toString() + "\n");
         }
         writer.close();
-    }
+    }//O(log(n))
 
     /**
      * Соединить два отсортированных массива в один
