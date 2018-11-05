@@ -1,6 +1,8 @@
 package lesson1;
 
 import kotlin.NotImplementedError;
+
+
 import java.io.*;
 import java.util.*;
 
@@ -100,24 +102,37 @@ public class JavaTasks {
      */
     static public void sortTemperatures(String inputName, String outputName) throws IOException {
         Reader rd = new FileReader(inputName);
-        List<Double> tmp = new ArrayList<Double>();
+        TreeSet<Double> tmp = new TreeSet<>();
+        Map<Double, Integer> repeat = new HashMap<>();
         BufferedReader br = new BufferedReader(rd);
         String localStr;
         while (true) {
             localStr = br.readLine();
             if (localStr == null)
                 break;
+            if (tmp.contains(Double.valueOf(localStr))) {
+                if (!repeat.containsKey(Double.valueOf(localStr)))
+                    repeat.put(Double.valueOf(localStr),1);
+                else repeat.put(Double.valueOf(localStr),repeat.get(Double.valueOf(localStr)) + 1);
+            }
             tmp.add(Double.valueOf(localStr));
         }
-        Collections.sort(tmp);
+        Iterator it = tmp.iterator();
         FileWriter writer = new FileWriter(new File(outputName));
-        for (int i = 0; i <= tmp.size() - 1; i++) {
-            if (i == tmp.size() - 1)
-                writer.write(tmp.get(i).toString());
-            else writer.write(tmp.get(i).toString() + "\n");
+        while (it.hasNext()){
+            String th = it.next().toString();
+            if (repeat.containsKey(Double.valueOf(th))) {
+                int num = repeat.get(Double.valueOf(th));
+                while (num != 0) {
+                    writer.write(th + "\n");
+                    num--;
+                }
+            }
+            writer.write(th + "\n");
         }
         writer.close();
-    } // O(n*log(n))
+    } // O(n*log(n)) - время
+      // O(n) - ресурсы
     /**
      * Сортировка последовательности
      *
@@ -150,9 +165,9 @@ public class JavaTasks {
     static public void sortSequence(String inputName, String outputName) throws IOException {
         int max = 0;
         Integer num = null;
-        HashMap<Integer, Integer> frequency = new HashMap<Integer, Integer>();
-        ArrayList<Integer> arr = new ArrayList<Integer>();
-        ArrayList<Integer> numList = new ArrayList<Integer>();
+        Map<Integer, Integer> frequency = new HashMap<Integer, Integer>();
+        List<Integer> arr = new ArrayList<Integer>();
+        List<Integer> numList = new ArrayList<Integer>();
         Reader rd = new FileReader(inputName);
         BufferedReader br = new BufferedReader(rd);
         String localStr;
@@ -196,7 +211,8 @@ public class JavaTasks {
             else writer.write(arr.get(i).toString() + "\n");
         }
         writer.close();
-    }//O(log(n))
+    }//O(log(n)) - время
+     //O(n) - ресурсы
 
     /**
      * Соединить два отсортированных массива в один

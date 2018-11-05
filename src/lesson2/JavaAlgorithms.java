@@ -133,7 +133,8 @@ public class JavaAlgorithms {
         }
         String ans = new String(ansConstractor);
         return ans;
-    }//O(m*n)
+    }//O(m*n) - время
+     //O(n) - ресурсы
 
     /**
      * Число простых чисел в интервале
@@ -248,4 +249,5 @@ public class JavaAlgorithms {
         }
             return letter == w.length();
     }
-} //O(n^2)
+} //O(n^2) - время
+  //O(n) - ресурсы

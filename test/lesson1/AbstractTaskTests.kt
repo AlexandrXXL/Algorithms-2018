@@ -117,7 +117,6 @@ abstract class AbstractTaskTests : AbstractFileTests() {
     }
 
     protected fun sortSequence(sortSequence: (String, String) -> Unit) {
-        // TODO: large test
         try {
             sortSequence("input/seq_in1.txt", "temp.txt")
             assertFileContent("temp.txt",
@@ -150,7 +149,6 @@ abstract class AbstractTaskTests : AbstractFileTests() {
         } finally {
             File("temp.txt").delete()
         }
-
         fun BufferedWriter.writeNumbers(numbers: List<Int>) {
             for (n in numbers) {
                 write("$n")
