@@ -4,6 +4,7 @@ import kotlin.NotImplementedError;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.xml.bind.Element;
 import java.util.*;
 
 // Attention: comparable supported but comparator is not
@@ -14,16 +15,14 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         final T value;
 
         Node<T> left = null;
-
         Node<T> right = null;
-
+        Node<T> parent = null;
         Node(T value) {
             this.value = value;
         }
     }
 
     private Node<T> root = null;
-
     private int size = 0;
 
     @Override
@@ -40,10 +39,12 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         else if (comparison < 0) {
             assert closest.left == null;
             closest.left = newNode;
+            newNode.parent = closest;
         }
         else {
             assert closest.right == null;
             closest.right = newNode;
+            newNode.parent = closest;
         }
         size++;
         return true;
@@ -66,7 +67,6 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      */
     @Override
     public boolean remove(Object o) {
-        // TODO
         throw new NotImplementedError();
     }
 
@@ -102,15 +102,38 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
 
         private Node<T> current = null;
 
-        private BinaryTreeIterator() {}
+        private BinaryTreeIterator() {
+        }
 
         /**
          * Поиск следующего элемента
          * Средняя
          */
+        // затраты по времени o(log(n)) в среднем O(n) в худшем случае
+        // затраты по ресурсам O(1)
         private Node<T> findNext() {
-            // TODO
-            throw new NotImplementedError();
+            Node<T> cur = current;
+            if (cur == null)
+                return find(first());
+            if (cur == root && cur.right == null)
+                return null;
+            if (cur.right != null) {
+                cur = cur.right;
+                while (cur.left != null) {
+                    cur = cur.left;
+                }
+                return cur;
+            }
+            if (cur == cur.parent.left)
+                return cur.parent;
+            else {
+                while (cur == cur.parent.right) {
+                    if (cur.parent == root)
+                        return null;
+                    else cur = cur.parent;
+                }
+            }
+            return cur.parent;
         }
 
         @Override
@@ -130,9 +153,123 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          * Сложная
          */
         @Override
+        // затраты по времени o(log(n)) в среднем и O(n) в худшем варианте
+        // затраты по ресурсам O(1)
         public void remove() {
-            // TODO
-            throw new NotImplementedError();
+            Node<T> n = null;
+            if (current == null)
+                return;
+            if (current.right == null && current.left == null) {
+                if (current == root) {
+                    root = null;
+                    current = null;
+                    size = 0;
+                    return;
+                }
+                else {
+                    n = current.parent;
+                    if (current.parent.right == current)
+                        current.parent.right = null;
+                    if (current.parent.left == current)
+                        current.parent.left = null;
+                    current.parent = null;
+                    size--;
+                    current = n;
+                    return;
+                }
+            }
+            if (current.right == null && current.left != null) {
+                if (current == root) {
+                    n = current.left;
+                    n.parent = null;
+                    root = n;
+                    current.left = null;
+                    size--;
+                    current = n;
+                    return;
+                }
+                else {
+                    n = current.left;
+                    if (current.parent.right == current)
+                        current.parent.right = n;
+                    if (current.parent.left == current)
+                        current.parent.left = n;
+                    n.parent = current.parent;
+                    current.parent = null;
+                    current.left = null;
+                    size--;
+                    current = n;
+                    return;
+                }
+            }
+            if (current.right != null && current.right.left == null) {
+                if (current == root) {
+                    n = current.right;
+                    n.parent = null;
+                    n.left = current.left;
+                    if (current.left != null)
+                        current.left.parent = n;
+                    root = n;
+                    current.left = null;
+                    current.right = null;
+                    size--;
+                    current = n;
+                    return;
+                } else {
+                    n = current.right;
+                    if (current.parent.right == current)
+                        current.parent.right = n;
+                    if (current.parent.left == current)
+                        current.parent.left = n;
+                    if (current.left != null) {
+                        current.left.parent = n;
+                    }
+                    n.parent = current.parent;
+                    n.left = current.left;
+                    current.left = null;
+                    current.parent = null;
+                    current.right = null;
+                    size--;
+                    current = n;
+                    return;
+                }
+            }
+            if (current.right != null && current.right.left != null) {
+                n = current.right;
+                while (n.left != null) {
+                    n = n.left;
+                }
+                if (n.right != null) {
+                    n.parent.left = n.right;
+                    n.right.parent = n.parent;
+                }
+                else n.parent.left = null;
+                if (current == root) {
+                    n.parent = null;
+                    n.right = root.right;
+                    n.left = root.left;
+                    n.right.parent = n;
+                    if (n.left != null)
+                        n.left.parent = n;
+                    root = n;
+                    current = root;
+                    size--;
+                    return;
+                }
+                else {
+                    if (current.parent.right == current)
+                        current.parent.right = n;
+                    else current.parent.left = n;
+                    n.parent = current.parent;
+                    n.left = current.left;
+                    n.right = current.right;
+                    n.right.parent = n;
+                    if (n.left != null)
+                        n.left.parent = n;
+                    current = n;
+                    size--;
+                }
+            }
         }
     }
 

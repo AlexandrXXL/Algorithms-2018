@@ -211,7 +211,7 @@ public class JavaTasks {
             else writer.write(arr.get(i).toString() + "\n");
         }
         writer.close();
-    }//O(log(n)) - время
+    }//O(nlog(n)) - время
      //O(n) - ресурсы
 
     /**
