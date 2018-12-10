@@ -8,12 +8,14 @@ class GraphTestsJava : AbstractGraphTests() {
     @Tag("Normal")
     fun testFindEulerLoop() {
         findEulerLoop { let { JavaGraphTasks.findEulerLoop(it) } }
+        SpecialEulerTest { let { JavaGraphTasks.findEulerLoop(it) } }
     }
 
     @Test
     @Tag("Normal")
     fun testMinimumSpanningTree() {
         minimumSpanningTree { let { JavaGraphTasks.minimumSpanningTree(it) } }
+        SpecialSpanningTreeTest { let { JavaGraphTasks.minimumSpanningTree(it) } }
     }
 
     @Test
